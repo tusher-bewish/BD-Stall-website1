@@ -3,218 +3,380 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Dynamic Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<header>
-    <div class="navbar">
-        <div class="name">
-            <img class="bdstall" src="bdstall.png" alt="bd stall">
+<body class="bg-gray-100">
+
+<!-- Desktop Navbar -->
+<header class="bg-white shadow-lg sticky top-0 z-50 hidden md:block">
+    <div class="max-w-7xl mx-auto flex items-center justify-between p-4 transition-all duration-300">
+        
+        <!-- Logo -->
+        <img class="h-12 hover:scale-110 transition-transform duration-300" src="bdstall.png" alt="logo">
+        
+        <!-- Category Dropdown -->
+        <select id="categoryFilter" class="border border-gray-300 px-4 py-2 rounded-lg hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" onchange="filterCategory()">
+            <option value="all">All Category</option>
+            <option value="Laptop">Laptop</option>
+            <option value="HP">HP</option>
+            <option value="Dell">Dell</option>
+            <option value="Mobile">Mobile</option>
+        </select>
+
+        <!-- Search Box -->
+        <div class="flex items-center gap-2 relative">
+            <input id="searchBox" type="text" placeholder="Search..."
+                class="border border-gray-300 px-4 py-2 rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 hover:shadow-md">
+            <button onclick="searchProduct()"
+                class="bg-gradient-to-r from-green-500 to-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:scale-105 transform transition-all duration-300 shadow-md absolute right-0">
+                Search
+            </button>
         </div>
-        <div class="navsearch">
-            <input placeholder="Search me">
-            <button>Search</button>
-        </div>
-        <div class="navbtm">
-            <button style="background-color: rgb(209, 20, 20);">sell Itam</button>
-            <button>Login</button>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-3">
+            <button class="bg-red-600 text-white px-5 py-2 rounded-lg font-semibold hover:scale-105 transform transition-all duration-300 shadow-md">
+                Sell
+            </button>
+
+            <button class="bg-blue-600 text-white px-5 py-2 rounded-lg relative font-semibold hover:scale-110 transform transition-all duration-300 shadow-md">
+                Cart
+                <span id="cartCount" class="absolute -top-2 -right-2 bg-yellow-400 text-black w-6 h-6 flex items-center justify-center rounded-full text-sm animate-pulse">0</span>
+            </button>
+
+            <button id="themeBtn" class="bg-gray-800 text-white px-5 py-2 rounded-lg font-semibold hover:bg-gray-900 hover:scale-105 transform transition-all duration-300 shadow-md">
+                Dark
+            </button>
         </div>
     </div>
 </header>
 
+<script>
+    // Active category highlight
+    const categorySelect = document.getElementById('categoryFilter');
+    categorySelect.addEventListener('change', () => {
+        categorySelect.classList.add('border-blue-500', 'ring-2', 'ring-blue-500');
+        setTimeout(() => {
+            categorySelect.classList.remove('border-blue-500', 'ring-2', 'ring-blue-500');
+        }, 1500);
+    });
 
+    // Theme toggle
+    // let dark = false;
+    // document.getElementById("themeBtn")?.addEventListener("click", () => {
+    //     dark = !dark;
+    //     document.body.classList.toggle("bg-black");
+    //     document.body.classList.toggle("text-white");
+    //     if(dark){
+    //         document.getElementById("themeBtn").innerText = "Light";
+    //     } else {
+    //         document.getElementById("themeBtn").innerText = "Dark";
+    //     }
+    // });
+</script>
 
-<body>
-    <section class="cad">
-        <div class="producet-cad">
-            <div class="pofile"><img class="pic" src="laptop.png" alt="laptop"></div>
-            <div class="name">
-                <h2>Toshiba Dynabook A40g Celeron 11th Gen 8 GB Ram</h2>
-            </div>
-            <div class="reating">
-                <p>⭐⭐⭐⭐☆</p>
-            </div>
-            <div class="price">
-                <h1 style="color: red;">৳18000</h1>
-            </div>
-            <div class="stcok">In Stock</div>
-            <div class="btm">
-                <button>Detalis</button>
-            </div>
-        </div>
+<!-- Mobile Navbar -->
+<div class="md:hidden bg-white shadow-md p-3 flex items-center justify-between fixed top-0 left-0 w-full z-50">
+    <img src="bdstall.png" class="h-10">
+    <input id="searchBox" placeholder="Search..." class="border px-3 py-1 rounded-lg w-36">
+    <button onclick="searchProduct()" class="bg-green-500 text-white px-3 py-1 rounded-lg text-sm">Go</button>
+</div>
 
+<br><br><br>
 
-                <div class="producet-cad">
-            <div class="pofile"><img class="pic" src="laptop2.png" alt="laptop"></div>
-            <div class="name">
-                <h2>Dell Inspiron 5402 Core i3 11th Gen 8GB RAM 256GB SSD</h2>
-            </div>
-            <div class="reating">
-                <p>⭐⭐⭐⭐☆</p>
-            </div>
-            <div class="price">
-                <h1 style="color: red;">৳ 29,500</h1>
-            </div>
-            <div class="stcok">In Stock</div>
-            <div class="btm">
-                <button>Detalis</button>
-            </div>
-        </div>
+<!-- Mobile Category Slider -->
+<div class="md:hidden px-3 mt-2 overflow-x-auto whitespace-nowrap">
+    <button onclick="filterCategoryMobile('all')" class="px-4 py-2 bg-gray-800 text-white rounded-full mx-1 text-sm">All</button>
+    <button onclick="filterCategoryMobile('Laptop')" class="px-4 py-2 bg-blue-600 text-white rounded-full mx-1 text-sm">Laptop</button>
+    <button onclick="filterCategoryMobile('HP')" class="px-4 py-2 bg-green-600 text-white rounded-full mx-1 text-sm">HP</button>
+    <button onclick="filterCategoryMobile('Dell')" class="px-4 py-2 bg-yellow-600 text-white rounded-full mx-1 text-sm">Dell</button>
+    <button onclick="filterCategoryMobile('Mobile')" class="px-4 py-2 bg-pink-600 text-white rounded-full mx-1 text-sm">Mobile</button>
+</div>
 
-                <div class="producet-cad">
-            <div class="pofile"><img class="pic" src="lenavo.png" alt="laptop"></div>
-            <div class="name">
-                <h2>Lenovo ThinkPad T490s Core i5 8th Gen 16GB / 256GB</h2>
-            </div>
-            <div class="reating">
-                <p>⭐⭐⭐⭐☆</p>
-            </div>
-            <div class="price">
-                <h1 style="color: red;">৳ 27,499</h1>
-            </div>
-            <div class="stcok">In Stock</div>
-            <div class="btm">
-                <button>Detalis</button>
-            </div>
-        </div>
+<!-- Desktop Product Cards -->
+<h2 id="categoryTitle" class="text-center text-2xl font-bold mt-4 hidden md:block">All Products</h2>
+<section id="productContainer" class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6 hidden md:grid">
+</section>
 
-                <div class="producet-cad">
-            <div class="pofile"><img class="pic" src="laptop3.png" alt="laptop"></div>
-            <div class="name">
-                <h2>HP ZBook 14u G8 Core i7 11th Gen Workstation</h2>
-            </div>
-            <div class="reating">
-                <p>⭐⭐⭐⭐☆</p>
-            </div>
-            <div class="price">
-                <h1 style="color: red;">৳ 68,999</h1>
-            </div>
-            <div class="stcok">In Stock</div>
-            <div class="btm">
-                <button>Detalis</button>
-            </div>
-        </div>
-    </section>
-    <section class="cad">
-        <div class="producet-cad">
-            <div class="pofile"><img class="pic" src="laptop4.png" alt="laptop"></div>
-            <div class="name">
-                <h2>HP EliteBook 840 G10 Core i5 13th Gen Touch Laptop</h2>
-            </div>
-            <div class="reating">
-                <p>⭐⭐⭐⭐☆</p>
-            </div>
-            <div class="price">
-                <h1 style="color: red;">৳ 61,300</h1>
-            </div>
-            <div class="stcok">In Stock</div>
-            <div class="btm">
-                <button>Detalis</button>
-            </div>
-        </div>
+<!-- Mobile Product Cards (Laptop + Mobile) -->
+<!-- Laptop Section -->
+<section id="mobileLaptopSection" class="md:hidden max-w-7xl mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Laptops</h1>
+    <div id="mobileLaptopProducts" class="grid grid-cols-1 gap-4">
+        <!-- JS দিয়ে লোড হবে -->
+    </div>
+</section>
 
+<!-- Mobile Section -->
+<section id="mobileMobileSection" class="md:hidden max-w-7xl mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Mobile</h1>
+    <div id="mobileMobileProducts" class="grid grid-cols-1 gap-4">
+        <!-- JS দিয়ে লোড হবে -->
+    </div>
+</section>
 
-                <div class="producet-cad">
-            <div class="pofile"><img class="pic" src="laptop5.png" alt="laptop"></div>
-            <div class="name">
-                <h2>HP ENVY X360 Core i5 12th 8GB RAM Metal Body</h2>
-            </div>
-            <div class="reating">
-                <p>⭐⭐⭐⭐☆</p>
-            </div>
-            <div class="price">
-                <h1 style="color: red;">৳ 65,000</h1>
-            </div>
-            <div class="stcok">In Stock</div>
-            <div class="btm">
-                <button>Detalis</button>
-            </div>
-        </div>
+<!-- Mobile Bottom Navigation -->
+<div class="md:hidden fixed bottom-0 left-0 w-full bg-white shadow-lg py-2 flex justify-around text-center">
+    <div class="flex flex-col items-center">
+        <img src="home.png" class="h-6">
+        <span class="text-xs">Home</span>
+    </div>
+    <div class="flex flex-col items-center">
+        <img src="cat.png" class="h-6">
+        <span class="text-xs">Categories</span>
+    </div>
+    <div class="flex flex-col items-center relative">
+        <img src="cart.png" class="h-6">
+        <span class="text-xs">Cart</span>
+        <span id="mobileCart" class="absolute -top-2 right-1 bg-red-500 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs">0</span>
+    </div>
+    <div class="flex flex-col items-center">
+        <img src="user.png" class="h-6">
+        <span class="text-xs">Account</span>
+    </div>
+</div>
+<!-- Contact Section -->
+<section id="contact" class="max-w-7xl mx-auto p-6 mt-12 rounded-3xl shadow-lg bg-gradient-to-r from-blue-100 to-purple-200">
+    <h2 class="text-3xl font-extrabold mb-4 text-center text-purple-800">Contact Us</h2>
+    <p class="text-center mb-8 text-gray-700">Reach out for any inquiries, suggestions or support. We'd love to hear from you!</p>
 
-                <div class="producet-cad">
-            <div class="pofile"><img class="pic" src="laptop6.png" alt="laptop"></div>
-            <div class="name">
-                <h2>HP EliteBook 840 G5 Core i5 8th Gen 8GB RAM 256GB SSD</h2>
-            </div>
-            <div class="reating">
-                <p>⭐⭐⭐⭐☆</p>
-            </div>
-            <div class="price">
-                <h1 style="color: red;">৳ 26,000</h1>
-            </div>
-            <div class="stcok">In Stock</div>
-            <div class="btm">
-                <button>Detalis</button>
-            </div>
-        </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Contact Form -->
+        <form id="contactForm" class="flex flex-col gap-5 bg-white p-6 rounded-2xl shadow-lg">
+            <input type="text" id="name" placeholder="Your Name" required
+                class="border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300">
+            <input type="email" id="email" placeholder="Your Email" required
+                class="border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300">
+            <textarea id="message" placeholder="Your Message" required
+                class="border border-gray-300 rounded-lg px-4 py-3 h-36 resize-none focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300"></textarea>
+            <button type="submit"
+                class="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:from-pink-500 hover:to-purple-500 shadow-md transition duration-300">
+                Send Message
+            </button>
+        </form>
 
-                <div class="producet-cad">
-            <div class="pofile"><img class="pic" src="laptop7.png" alt="laptop"></div>
-            <div class="name">
-                <h2>HP EliteBook 840 G7 Core i7 10th Gen 256GB SSD</h2>
-            </div>
-            <div class="reating">
-                <p>⭐⭐⭐⭐☆</p>
-            </div>
-            <div class="price">
-                <h1 style="color: red;">৳ 38,500</h1>
-            </div>
-            <div class="stcok">In Stock</div>
-            <div class="btm">
-                <button>Detalis</button>
-            </div>
-        </div>
-    </section>
-    <footer>
-        <div class="footer-contaear">
-            <div class="footer-coloum">
-                <h3>Shopping</h3>
-                <uL>
-                    <li><a href="#">Stall List</a></li>
-                    <li><a href="#">Shopping Mall</a></li>
-                    <li><a href="#">Brand</a></li>
-                </uL>
-            </div>
-
-
-
-            <div class="footer-coloum">
-                <h3>Knowledge Base</h3>
-                <uL>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">FAQ</a></li>
-                </uL>
-            </div>
-
-
+        <!-- Contact Info Cards -->
+        <div class="flex flex-col gap-6">
+            <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow hover:shadow-xl transition duration-300 cursor-pointer">
             
-
-            <div class="footer-coloum">
-                <img class="bdstall2" src="bdstall2.png" alt="bdstall2">
-                <uL>
-                    <li><a href="#">Contact Us</a></li>
-                    <li><a href="#">Sell on Bdstall</a></li>
-                    <li><a href="#">Career</a></li>
-                    <li><a href="#">Site Map</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms & Conditions</a></li>
-                </uL>
+                <span class="text-lg font-medium text-gray-800">+880 1817 833306</span>
             </div>
-
-                        <div class="footer-coloum">
-                            <h3>Download App</h3>
-                            <img class="google-pic" src="google.png" alt="googole playstore">
-                         <h3>Follow Us</h3>
-                         <div class="all-pic">
-                        <img src="facebook.png"> <img src="intagram.png"> <img src="youtube.png"><img src="pintarest.png">
-                         </div>
-
-                        </div>
-
-
+            <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow hover:shadow-xl transition duration-300 cursor-pointer">
+                
+                <span class="text-lg font-medium text-gray-800">siambewish144@gmail.com</span>
+            </div>
+            <div class="flex items-center gap-4 p-4 bg-white rounded-2xl shadow hover:shadow-xl transition duration-300 cursor-pointer">
+                
+                <span class="text-lg font-medium text-gray-800">Chormirkamari, Ishwardi, Pabna, Bangladesh</span>
+            </div>
+            <p class="mt-4 text-gray-500 text-sm text-center">We respond within 24 hours.</p>
         </div>
-    </footer>
+    </div>
+</section>
 
+<script>
+document.getElementById("contactForm").addEventListener("submit", function(e){
+    e.preventDefault(); 
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const message = document.getElementById("message").value.trim();
+
+    if(name && email && message){
+        alert(`Thank you ${name}, your message has been sent!`);
+        console.log({name, email, message});
+        this.reset();
+    } else {
+        alert("Please fill all fields!");
+    }
+});
+</script>
+<!-- Footer -->
+<footer class="bg-gray-900 text-gray-300 mt-12">
+    <div class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+        
+        <!-- Logo & About -->
+        <div class="flex flex-col gap-4">
+            <img src="bdstall.png" alt="Logo" class="h-12 hover:scale-110 transition-transform duration-300">
+            <p class="text-gray-400 text-sm">Dynamic Shop - Your one-stop solution for Laptops & Mobiles. Quality products with great support.</p>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="flex flex-col gap-2">
+            <h3 class="text-white font-bold mb-2">Quick Links</h3>
+            <a href="#" class="hover:text-green-500 transition-colors duration-300">Home</a>
+            <a href="#" class="hover:text-green-500 transition-colors duration-300">Products</a>
+            <a href="#contact" class="hover:text-green-500 transition-colors duration-300">Contact</a>
+            <a href="#" class="hover:text-green-500 transition-colors duration-300">About</a>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="flex flex-col gap-2">
+            <h3 class="text-white font-bold mb-2">Contact</h3>
+            <p class="flex items-center gap-2"> +880 1817 833306</p>
+            <p class="flex items-center gap-2"> siambewish144@gmail.com</p>
+            <p class="flex items-center gap-2"> Chormirkamari, Ishwardi, Pabna, Bangladesh</p>
+        </div>
+
+        <!-- Social Media -->
+        <div class="flex flex-col gap-2">
+            <h3 class="text-white font-bold mb-2">Follow Us</h3>
+            <div class="flex gap-4 mt-2">
+                <a href="#" class="hover:text-blue-500 transition-colors duration-300"><img src="facebook.png" class="h-6 w-6"></a>
+                <a href="#" class="hover:text-blue-400 transition-colors duration-300"><img src="google.png" class="h-6 w-6"></a>
+                <a href="#" class="hover:text-pink-500 transition-colors duration-300"><img src="intagram.png" class="h-6 w-6"></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="border-t border-gray-700 mt-6 py-4 text-center text-gray-500 text-sm">
+        &copy; 2025 Dynamic Shop. All rights reserved.
+    </div>
+</footer>
+
+
+
+
+<!-- JS Logic -->
+<script>
+// Product List (Laptop + Mobile)
+const products = [
+    { name: "Toshiba Dynabook", price: 18000, img: "laptop.png", cat: "Laptop" },
+    { name: "Dell Inspiron i3", price: 29500, img: "laptop2.png", cat: "Dell" },
+    { name: "Lenovo ThinkPad T490", price: 27499, img: "lenavo.png", cat: "Laptop" },
+    { name: "HP ZBook 14u", price: 68999, img: "laptop3.png", cat: "HP" },
+    { name: "HP EliteBook G10", price: 61300, img: "laptop4.png", cat: "HP" },
+    { name: "HP Envy X360", price: 65000, img: "laptop5.png", cat: "HP" },
+    { name: "Samsung Galaxy A52", price: 22500, img: "./moblie/samsung a52.jpeg", cat: "Mobile" },
+    { name: "iPhone 12 Pro", price: 52000, img: "./moblie/i phone 12.jpeg", cat: "Mobile" },
+    { name: "OnePlus Nord N30 SE", price: 18000, img: "./moblie/one plus.jpeg", cat: "Mobile" },
+];
+
+// Desktop Product Load
+function loadProducts(list) {
+    let box = document.getElementById("productContainer");
+    box.innerHTML = "";
+    list.forEach(p => {
+        box.innerHTML += `
+            <div class="bg-white p-4 rounded-2xl shadow hover:shadow-2xl duration-300">
+                <img src="${p.img}" class="h-40 mx-auto object-cover rounded-xl">
+                <h2 class="font-bold mt-2 text-sm">${p.name}</h2>
+                <p class="text-red-600 text-xl font-bold mt-1">৳ ${p.price}</p>
+                <div class="flex gap-2 mt-2">
+                    <button class="bg-green-600 text-white w-1/2 py-2 rounded-lg text-sm font-semibold" onclick="addToCart()">Add to Cart</button>
+                    <button class="bg-gray-800 text-white w-1/2 py-2 rounded-lg text-sm font-semibold">Details</button>
+                </div>
+            </div>
+        `;
+    });
+}
+loadProducts(products);
+
+// Mobile Product Load
+function loadMobileProducts() {
+    const laptopBox = document.getElementById("mobileLaptopProducts");
+    const mobileBox = document.getElementById("mobileMobileProducts");
+    laptopBox.innerHTML = "";
+    mobileBox.innerHTML = "";
+
+    products.forEach(p => {
+        const card = `
+            <div class="bg-white p-4 rounded-2xl shadow-lg hover:shadow-2xl duration-300">
+                <img src="${p.img}" class="h-40 mx-auto object-cover rounded-xl">
+                <h2 class="font-bold mt-2 text-base">${p.name}</h2>
+                <p class="text-red-600 text-lg font-bold mt-1">৳ ${p.price}</p>
+                <div class="flex gap-2 mt-2">
+                    <button class="bg-green-600 text-white w-1/2 py-2 rounded-lg text-sm font-semibold" onclick="addToCart()">Add to Cart</button>
+                    <button class="bg-gray-800 text-white w-1/2 py-2 rounded-lg text-sm font-semibold">Details</button>
+                </div>
+            </div>
+        `;
+        if (p.cat === "Mobile") mobileBox.innerHTML += card;
+        else laptopBox.innerHTML += card;
+    });
+}
+loadMobileProducts();
+
+// Category Filter Desktop
+function filterCategory() {
+    let cat = document.getElementById("categoryFilter").value;
+    let filtered = (cat === "all") ? products : products.filter(p => p.cat === cat);
+    loadProducts(filtered);
+}
+
+// Category Filter Mobile
+function filterCategoryMobile(cat) {
+    if (cat === "all") {
+        loadMobileProducts();
+        return;
+    }
+    const filtered = products.filter(p => p.cat === cat);
+    const laptopBox = document.getElementById("mobileLaptopProducts");
+    const mobileBox = document.getElementById("mobileMobileProducts");
+    laptopBox.innerHTML = "";
+    mobileBox.innerHTML = "";
+
+    filtered.forEach(p => {
+        const card = `
+            <div class="bg-white p-4 rounded-2xl shadow-lg hover:shadow-2xl duration-300">
+                <img src="${p.img}" class="h-40 mx-auto object-cover rounded-xl">
+                <h2 class="font-bold mt-2 text-base">${p.name}</h2>
+                <p class="text-red-600 text-lg font-bold mt-1">৳ ${p.price}</p>
+                <div class="flex gap-2 mt-2">
+                    <button class="bg-green-600 text-white w-1/2 py-2 rounded-lg text-sm font-semibold" onclick="addToCart()">Add to Cart</button>
+                    <button class="bg-gray-800 text-white w-1/2 py-2 rounded-lg text-sm font-semibold">Details</button>
+                </div>
+            </div>
+        `;
+        if (p.cat === "Mobile") mobileBox.innerHTML += card;
+        else laptopBox.innerHTML += card;
+    });
+}
+
+// Search
+function searchProduct() {
+    let txt = document.getElementById("searchBox").value.toLowerCase();
+    const filtered = products.filter(p => p.name.toLowerCase().includes(txt));
+    loadProducts(filtered);
+
+    const laptopBox = document.getElementById("mobileLaptopProducts");
+    const mobileBox = document.getElementById("mobileMobileProducts");
+    laptopBox.innerHTML = "";
+    mobileBox.innerHTML = "";
+    filtered.forEach(p => {
+        const card = `
+            <div class="bg-white p-4 rounded-2xl shadow-lg hover:shadow-2xl duration-300">
+                <img src="${p.img}" class="h-40 mx-auto object-cover rounded-xl">
+                <h2 class="font-bold mt-2 text-base">${p.name}</h2>
+                <p class="text-red-600 text-lg font-bold mt-1">৳ ${p.price}</p>
+                <div class="flex gap-2 mt-2">
+                    <button class="bg-green-600 text-white w-1/2 py-2 rounded-lg text-sm font-semibold" onclick="addToCart()">Add to Cart</button>
+                    <button class="bg-gray-800 text-white w-1/2 py-2 rounded-lg text-sm font-semibold">Details</button>
+                </div>
+            </div>
+        `;
+        if (p.cat === "Mobile") mobileBox.innerHTML += card;
+        else laptopBox.innerHTML += card;
+    });
+}
+
+// Cart Update
+let cart = 0;
+function addToCart() {
+    cart++;
+    document.getElementById("cartCount").innerText = cart;
+    document.getElementById("mobileCart").innerText = cart;
+}
+
+// Dark Mode
+let dark = false;
+document.getElementById("themeBtn")?.addEventListener("click", () => {
+    dark = !dark;
+    document.body.classList.toggle("bg-black");
+    document.body.classList.toggle("text-white");
+});
+</script>
 
 </body>
 </html>
